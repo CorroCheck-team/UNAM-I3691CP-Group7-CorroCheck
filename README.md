@@ -53,5 +53,5 @@ CorroCheck is a mobile application designed to modernize and simplify the proces
 
 ## Branch Rules
 - Never push directly to `main`
-- Every feature gets its own branch: `LOGIN/LOGIN-screen`
+- Every feature gets its own branch: `feature/your-feature name`
 - When done, open a Pull Request and wait for the Project Manager or GitHub Manager to review and approve it
