@@ -1,5 +1,5 @@
-import HistoryDetailsScreen from './src/Screens/History/HistoryDetailsScreen';
+import AppNavigation from "./src/Navigation/AppNavigation";
 
 export default function App() {
-  return <HistoryDetailsScreen />;
+  return <AppNavigation />;
 }
