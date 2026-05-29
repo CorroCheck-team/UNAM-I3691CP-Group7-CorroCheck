@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Modal, Pressable, StyleSheet, View } from "react-native";
 
-import DesignScreen, { box, designAssets, GhostInput, HitArea } from "../../components/DesignScreen";
+import DesignScreen, { box, designAssets, DesignImage, GhostInput, HitArea } from "../../components/DesignScreen";
 
 export default function UploadScreen({ navigation }) {
   const [typeOpen, setTypeOpen] = useState(false);
@@ -42,7 +42,8 @@ export default function UploadScreen({ navigation }) {
       <Modal transparent visible={typeOpen} animationType="fade">
         <Pressable style={styles.overlay} onPress={() => setTypeOpen(false)}>
           <View style={styles.dropdown}>
-            <DesignScreen source={designAssets.selectType}>
+            <DesignImage source={designAssets.selectType} style={styles.alertImage} />
+            <View style={StyleSheet.absoluteFill}>
               {[0, 1, 2, 3].map((index) => (
                 <HitArea
                   key={index}
@@ -53,7 +54,7 @@ export default function UploadScreen({ navigation }) {
                   style={box(0, index * 25, 100, 25)}
                 />
               ))}
-            </DesignScreen>
+            </View>
           </View>
         </Pressable>
       </Modal>
@@ -61,7 +62,7 @@ export default function UploadScreen({ navigation }) {
       <Modal transparent visible={loading} animationType="fade">
         <View style={styles.overlay}>
           <View style={styles.alert}>
-            <DesignScreen source={designAssets.loading} />
+            <DesignImage source={designAssets.loading} style={styles.alertImage} />
           </View>
         </View>
       </Modal>
@@ -69,7 +70,7 @@ export default function UploadScreen({ navigation }) {
       <Modal transparent visible={failed} animationType="fade">
         <Pressable onPress={() => setFailed(false)} style={styles.overlay}>
           <View style={styles.alert}>
-            <DesignScreen source={designAssets.error} />
+            <DesignImage source={designAssets.error} style={styles.alertImage} />
           </View>
         </Pressable>
       </Modal>
@@ -91,5 +92,9 @@ const styles = StyleSheet.create({
   alert: {
     width: "92%",
     height: "34%",
+  },
+  alertImage: {
+    width: "100%",
+    height: "100%",
   },
 });

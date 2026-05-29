@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Modal, StyleSheet, View } from "react-native";
 
-import DesignScreen, { box, designAssets, HitArea } from "../../components/DesignScreen";
+import DesignScreen, { box, designAssets, DesignImage, HitArea } from "../../components/DesignScreen";
 import { defaultInspection } from "../../data/inspections";
 
 export default function ResultScreen({ navigation }) {
@@ -23,7 +23,7 @@ export default function ResultScreen({ navigation }) {
       <Modal transparent visible={saved} animationType="fade">
         <View style={styles.overlay}>
           <View style={styles.alert}>
-            <DesignScreen source={designAssets.success} />
+            <DesignImage source={designAssets.success} style={styles.alertImage} />
           </View>
         </View>
       </Modal>
@@ -41,5 +41,9 @@ const styles = StyleSheet.create({
   alert: {
     width: "92%",
     height: "34%",
+  },
+  alertImage: {
+    width: "100%",
+    height: "100%",
   },
 });

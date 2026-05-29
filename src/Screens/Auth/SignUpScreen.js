@@ -30,8 +30,8 @@ export default function SignUpScreen({ navigation }) {
         style={box(16, 54, 62, 4)}
         value={form.confirm}
       />
-      <HitArea onPress={() => navigation.replace("Home")} style={box(35, 70, 30, 7)} />
-      <HitArea onPress={() => navigation.navigate("Login")} style={box(61, 79, 20, 4)} />
+      <HitArea onPress={() => navigation.replace("Home")} style={box(34, 70, 32, 7)} />
+      <HitArea onPress={() => navigation.navigate("Login")} style={box(60, 79, 22, 4)} />
     </DesignScreen>
   );
 }

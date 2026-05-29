@@ -4,7 +4,7 @@ import DesignScreen, { designAssets } from "../components/DesignScreen";
 
 export default function SplashScreen({ onFinish }) {
   useEffect(() => {
-    const timer = setTimeout(onFinish, 700);
+    const timer = setTimeout(onFinish, 4000);
 
     return () => clearTimeout(timer);
   }, [onFinish]);

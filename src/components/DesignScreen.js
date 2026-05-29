@@ -1,4 +1,4 @@
-import { ImageBackground, Pressable, StyleSheet, TextInput, View } from "react-native";
+import { Image, ImageBackground, Pressable, StatusBar, StyleSheet, TextInput, View } from "react-native";
 
 export const designAssets = {
   emptyHistory: require("../../docs/designs/UI designs/Empty History screen.png"),
@@ -22,11 +22,16 @@ export const designAssets = {
 export default function DesignScreen({ children, source }) {
   return (
     <View style={styles.screen}>
-      <ImageBackground resizeMode="stretch" source={source} style={styles.image}>
+      <StatusBar hidden />
+      <ImageBackground fadeDuration={0} resizeMode="stretch" source={source} style={styles.image}>
         {children}
       </ImageBackground>
     </View>
   );
+}
+
+export function DesignImage({ source, style }) {
+  return <Image fadeDuration={0} resizeMode="stretch" source={source} style={style} />;
 }
 
 export function HitArea({ children, onPress, style }) {
@@ -61,9 +66,7 @@ export function box(left, top, width, height) {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    alignSelf: "center",
     width: "100%",
-    maxWidth: 450,
     backgroundColor: "#f4f4f4",
   },
   image: {

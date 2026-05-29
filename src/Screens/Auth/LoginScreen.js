@@ -15,9 +15,9 @@ export default function LoginScreen({ navigation }) {
         style={box(22, 41, 56, 4)}
         value={password}
       />
-      <HitArea onPress={() => navigation.navigate("ForgotPassword")} style={box(35, 73, 30, 4)} />
-      <HitArea onPress={() => navigation.replace("Home")} style={box(25, 78, 50, 7)} />
-      <HitArea onPress={() => navigation.navigate("SignUp")} style={box(66, 87, 18, 4)} />
+      <HitArea onPress={() => navigation.navigate("ForgotPassword")} style={box(36, 73, 28, 3)} />
+      <HitArea onPress={() => navigation.replace("Home")} style={box(22, 79, 56, 6)} />
+      <HitArea onPress={() => navigation.navigate("SignUp")} style={box(67, 88, 17, 3)} />
     </DesignScreen>
   );
 }
