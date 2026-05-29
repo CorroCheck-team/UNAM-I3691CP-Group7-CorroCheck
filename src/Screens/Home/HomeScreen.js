@@ -24,7 +24,7 @@ export default function HomeScreen({ navigation }) {
           onPress={() => navigation.navigate("Profile")}
           style={styles.profileButton}
         >
-          <Ionicons name="person-outline" size={38} color="#1f426d" />
+          <Ionicons name="person-outline" size={38} color="#1e3f68" />
         </Pressable>
 
         <View style={styles.statsCard}>
@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
     height: 300,
     paddingHorizontal: 26,
     paddingTop: 42,
-    backgroundColor: "#1f426d",
+    backgroundColor: "#1e3f68",
   },
   greeting: {
     color: "#b7c9dd",
@@ -111,8 +111,8 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 36,
     right: 22,
-    width: 58,
-    height: 58,
+    width: 56,
+    height: 56,
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 29,
@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     borderRadius: 23,
-    backgroundColor: "#657b94",
+    backgroundColor: "#617890",
   },
   statItem: {
     flex: 1,
@@ -138,14 +138,14 @@ const styles = StyleSheet.create({
     borderLeftColor: "#b7c9dd",
   },
   statDot: {
-    width: 12,
-    height: 12,
+    width: 11,
+    height: 11,
     borderRadius: 6,
-    marginBottom: 8,
+    marginBottom: 7,
   },
   statCount: {
     color: "#ffffff",
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: "900",
   },
   statLabel: {
@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
     gap: 12,
     marginBottom: 30,
     borderRadius: 9,
-    backgroundColor: "#1f426d",
+    backgroundColor: "#1e3f68",
   },
   uploadText: {
     color: "#ffffff",
@@ -179,7 +179,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   sectionTitle: {
-    color: "#1f426d",
+    color: "#1e3f68",
     fontSize: 20,
     fontWeight: "900",
   },
@@ -211,12 +211,12 @@ const styles = StyleSheet.create({
     paddingLeft: 18,
   },
   activityTitle: {
-    color: "#1f426d",
+    color: "#1e3f68",
     fontSize: 16,
     fontWeight: "900",
   },
   activityDate: {
-    color: "#1f426d",
+    color: "#1e3f68",
     fontSize: 14,
   },
   badge: {

@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    color: "#1f426d",
+    color: "#1e3f68",
     fontSize: 13,
     paddingVertical: 0,
   },
@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginTop: 272,
     borderRadius: 24,
-    backgroundColor: "#1f426d",
+    backgroundColor: "#1e3f68",
     shadowColor: "#000000",
     shadowOpacity: 0.25,
     shadowRadius: 7,
@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
     marginTop: 18,
   },
   backText: {
-    color: "#1f426d",
+    color: "#1e3f68",
     fontSize: 16,
     fontWeight: "600",
   },
@@ -175,15 +175,15 @@ const styles = StyleSheet.create({
     backgroundColor: "#c4f6c9",
   },
   alertTitle: {
-    color: "#1f426d",
-    fontSize: 42,
+    color: "#1e3f68",
+    fontSize: 36,
     fontWeight: "900",
   },
   alertMessage: {
     marginTop: 22,
-    color: "#1f426d",
-    fontSize: 34,
-    lineHeight: 42,
+    color: "#1e3f68",
+    fontSize: 28,
+    lineHeight: 36,
     textAlign: "center",
   },
 });

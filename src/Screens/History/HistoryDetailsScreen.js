@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
     marginHorizontal: 4,
     borderRadius: 12,
-    backgroundColor: "#1f426d",
+    backgroundColor: "#1e3f68",
   },
   backButtonText: {
     color: "#b7c9dd",

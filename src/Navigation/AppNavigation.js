@@ -27,6 +27,8 @@ export default function AppNavigation() {
       <Stack.Navigator
         initialRouteName="Login"
         screenOptions={{
+          animation: "none",
+          animationEnabled: false,
           headerShown: false,
           cardStyle: { backgroundColor: "#f4f4f4" },
         }}

@@ -42,7 +42,7 @@ export default function UploadScreen({ navigation }) {
           notes: notes || "Visible rust forming along the weld seam. Needs urgent attention.",
         },
       });
-    }, 1200);
+    }, 350);
   };
 
   return (
@@ -131,7 +131,7 @@ export default function UploadScreen({ navigation }) {
                 <Ionicons
                   name={selectedType === type ? "radio-button-on" : "radio-button-off"}
                   size={22}
-                  color="#1f426d"
+                  color="#1e3f68"
                 />
               </Pressable>
             ))}
@@ -140,7 +140,7 @@ export default function UploadScreen({ navigation }) {
       </Modal>
 
       <FeedbackOverlay
-        icon={<ActivityIndicator color="#1f426d" size="large" />}
+        icon={<ActivityIndicator color="#1e3f68" size="large" />}
         message="Please wait..."
         title="Analyzing image"
         visible={loading}
@@ -177,7 +177,7 @@ const styles = StyleSheet.create({
   content: {
     paddingHorizontal: 26,
     paddingTop: 18,
-    paddingBottom: 18,
+    paddingBottom: 10,
   },
   photoBox: {
     height: 200,
@@ -198,7 +198,7 @@ const styles = StyleSheet.create({
   label: {
     marginTop: 3,
     marginBottom: 2,
-    color: "#1f426d",
+    color: "#1e3f68",
     fontSize: 14,
   },
   mutedLabel: {
@@ -220,7 +220,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   selectTextActive: {
-    color: "#1f426d",
+    color: "#1e3f68",
   },
   inputRow: {
     height: 48,
@@ -234,7 +234,7 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    color: "#1f426d",
+    color: "#1e3f68",
     fontSize: 16,
     paddingVertical: 0,
   },
@@ -249,7 +249,7 @@ const styles = StyleSheet.create({
   },
   notesInput: {
     flex: 1,
-    color: "#1f426d",
+    color: "#1e3f68",
     fontSize: 16,
     textAlignVertical: "top",
   },
@@ -261,7 +261,7 @@ const styles = StyleSheet.create({
     gap: 14,
     marginTop: 18,
     borderRadius: 9,
-    backgroundColor: "#1f426d",
+    backgroundColor: "#1e3f68",
   },
   submitText: {
     color: "#b7c9dd",
@@ -289,7 +289,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 30,
   },
   optionText: {
-    color: "#1f426d",
+    color: "#1e3f68",
     fontSize: 16,
   },
   feedbackCard: {
@@ -314,16 +314,16 @@ const styles = StyleSheet.create({
     backgroundColor: "#f6bcbc",
   },
   feedbackTitle: {
-    color: "#1f426d",
-    fontSize: 42,
+    color: "#1e3f68",
+    fontSize: 34,
     fontWeight: "900",
     textAlign: "center",
   },
   feedbackMessage: {
     marginTop: 22,
-    color: "#1f426d",
-    fontSize: 30,
-    lineHeight: 38,
+    color: "#1e3f68",
+    fontSize: 26,
+    lineHeight: 34,
     textAlign: "center",
   },
 });

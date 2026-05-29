@@ -18,7 +18,7 @@ export default function ResultScreen({ navigation, route }) {
     setTimeout(() => {
       setSaved(false);
       navigation.navigate("HistoryDetails", { item: inspection });
-    }, 1500);
+    }, 900);
   };
 
   return (
@@ -36,7 +36,7 @@ export default function ResultScreen({ navigation, route }) {
         </Pressable>
 
         <Pressable onPress={() => navigation.navigate("Home")} style={styles.secondaryButton}>
-          <Ionicons name="home-outline" size={23} color="#1f426d" />
+          <Ionicons name="home-outline" size={23} color="#1e3f68" />
           <Text style={styles.secondaryText}>Back to Home</Text>
         </Pressable>
       </ScrollView>
@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
   content: {
     paddingHorizontal: 26,
     paddingTop: 8,
-    paddingBottom: 26,
+    paddingBottom: 16,
   },
   primaryButton: {
     height: 48,
@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 4,
     marginTop: 8,
     borderRadius: 8,
-    backgroundColor: "#1f426d",
+    backgroundColor: "#1e3f68",
   },
   primaryText: {
     color: "#b7c9dd",
@@ -87,12 +87,12 @@ const styles = StyleSheet.create({
     marginHorizontal: 4,
     marginTop: 10,
     borderWidth: 1,
-    borderColor: "#1f426d",
+    borderColor: "#1e3f68",
     borderRadius: 8,
     backgroundColor: "#ffffff",
   },
   secondaryText: {
-    color: "#1f426d",
+    color: "#1e3f68",
     fontSize: 16,
     fontWeight: "900",
   },
@@ -122,15 +122,15 @@ const styles = StyleSheet.create({
     backgroundColor: "#c4f6c9",
   },
   alertTitle: {
-    color: "#1f426d",
-    fontSize: 42,
+    color: "#1e3f68",
+    fontSize: 36,
     fontWeight: "900",
   },
   alertMessage: {
     marginTop: 22,
-    color: "#1f426d",
-    fontSize: 34,
-    lineHeight: 42,
+    color: "#1e3f68",
+    fontSize: 28,
+    lineHeight: 36,
     textAlign: "center",
   },
 });

@@ -1,3 +1,4 @@
+import { useMemo, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 
@@ -5,7 +6,22 @@ import { BottomNav, Header, ScreenShell } from "../../components/AppScaffold";
 import { inspections, severityTheme } from "../../data/inspections";
 
 export default function HistoryScreen({ navigation }) {
-  const hasInspections = inspections.length > 0;
+  const [query, setQuery] = useState("");
+  const visibleInspections = useMemo(() => {
+    const normalized = query.trim().toLowerCase();
+
+    if (!normalized) {
+      return [...inspections, ...inspections];
+    }
+
+    return inspections.filter((item) =>
+      [item.title, item.date, item.severity, item.corrosionType]
+        .join(" ")
+        .toLowerCase()
+        .includes(normalized)
+    );
+  }, [query]);
+  const hasInspections = visibleInspections.length > 0;
 
   return (
     <ScreenShell activeTab="History">
@@ -13,9 +29,11 @@ export default function HistoryScreen({ navigation }) {
       <View style={styles.searchWrap}>
         <Ionicons name="search-outline" size={24} color="#d6d6d6" />
         <TextInput
+          onChangeText={setQuery}
           placeholder="Search Inspection..."
           placeholderTextColor="#d6d6d6"
           style={styles.searchInput}
+          value={query}
         />
       </View>
       <Text style={styles.count}>{hasInspections ? "17 inspections total" : "0 inspections total"}</Text>
@@ -25,7 +43,7 @@ export default function HistoryScreen({ navigation }) {
           contentContainerStyle={styles.list}
           showsVerticalScrollIndicator={false}
         >
-          {[...inspections, ...inspections].map((item, index) => (
+          {visibleInspections.map((item, index) => (
             <HistoryCard
               item={item}
               key={`${item.id}-${index}`}
@@ -64,7 +82,7 @@ function HistoryCard({ item, onPress }) {
         <View style={[styles.badge, { backgroundColor: theme.soft }]}>
           <Text style={[styles.badgeText, { color: theme.color }]}>{item.severity}</Text>
         </View>
-        <Ionicons name="chevron-forward" size={27} color="#1f426d" />
+        <Ionicons name="chevron-forward" size={25} color="#1e3f68" />
       </View>
     </Pressable>
   );
@@ -85,7 +103,7 @@ const styles = StyleSheet.create({
   },
   searchInput: {
     flex: 1,
-    color: "#1f426d",
+    color: "#1e3f68",
     fontSize: 16,
     paddingVertical: 0,
   },
@@ -130,16 +148,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
   },
   cardTitle: {
-    color: "#1f426d",
+    color: "#1e3f68",
     fontSize: 16,
     fontWeight: "900",
   },
   cardDate: {
-    color: "#1f426d",
+    color: "#1e3f68",
     fontSize: 14,
   },
   cardType: {
-    color: "#1f426d",
+    color: "#1e3f68",
     fontSize: 14,
   },
   cardRight: {

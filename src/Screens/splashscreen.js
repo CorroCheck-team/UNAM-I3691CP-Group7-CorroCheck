@@ -5,7 +5,7 @@ const splashDesign = require("../../docs/designs/UI designs/Splash Screen.png");
 
 export default function SplashScreen({ onFinish }) {
   useEffect(() => {
-    const timer = setTimeout(onFinish, 1800);
+    const timer = setTimeout(onFinish, 700);
 
     return () => clearTimeout(timer);
   }, [onFinish]);

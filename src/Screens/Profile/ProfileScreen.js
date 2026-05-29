@@ -23,7 +23,7 @@ export default function ProfileScreen({ navigation }) {
           onPress={() => navigation.navigate("Home")}
           style={styles.backButton}
         >
-          <Ionicons name="arrow-back-circle-outline" size={28} color="#1f426d" />
+          <Ionicons name="arrow-back-circle-outline" size={28} color="#1e3f68" />
         </Pressable>
         <View style={styles.notch} />
       </View>
@@ -31,7 +31,7 @@ export default function ProfileScreen({ navigation }) {
       <View style={styles.content}>
         <View style={styles.avatarWrap}>
           <View style={styles.avatar}>
-            <Ionicons name="person-outline" size={104} color="#1f426d" />
+            <Ionicons name="person-outline" size={104} color="#1e3f68" />
           </View>
           <View style={styles.editAvatar}>
             <Ionicons name="pencil-outline" size={23} color="#b7c9dd" />
@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
     height: 30,
     marginTop: 4,
     borderRadius: 16,
-    backgroundColor: "#1f426d",
+    backgroundColor: "#1e3f68",
   },
   content: {
     flex: 1,
@@ -137,17 +137,17 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 18,
-    backgroundColor: "#1f426d",
+    backgroundColor: "#1e3f68",
   },
   name: {
     marginTop: 8,
-    color: "#1f426d",
+    color: "#1e3f68",
     fontSize: 20,
     fontWeight: "900",
   },
   email: {
     marginTop: 5,
-    color: "#1f426d",
+    color: "#1e3f68",
     fontSize: 16,
   },
   card: {
@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
   label: {
     marginLeft: 6,
     marginBottom: 2,
-    color: "#1f426d",
+    color: "#1e3f68",
     fontSize: 12,
   },
   inputWrap: {
@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
     borderRadius: 18,
     paddingLeft: 12,
     paddingRight: 13,
-    backgroundColor: "#1f426d",
+    backgroundColor: "#1e3f68",
   },
   input: {
     flex: 1,
@@ -191,7 +191,7 @@ const styles = StyleSheet.create({
     marginTop: 12,
     borderRadius: 18,
     paddingHorizontal: 14,
-    backgroundColor: "#1f426d",
+    backgroundColor: "#1e3f68",
   },
   logoutText: {
     color: "#b7c9dd",

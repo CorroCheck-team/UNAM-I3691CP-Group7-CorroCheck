@@ -114,7 +114,7 @@ function Field({ action, label, ...props }) {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: "#1f426d",
+    backgroundColor: "#1e3f68",
   },
   content: {
     flex: 1,
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
     maxWidth: 430,
     paddingHorizontal: 72,
     paddingTop: 108,
-    backgroundColor: "#1f426d",
+    backgroundColor: "#1e3f68",
   },
   title: {
     alignSelf: "flex-end",

@@ -8,7 +8,14 @@ const tabs = [
   { route: "Profile", label: "Profile", icon: "person-outline" },
 ];
 
-export function ScreenShell({ children, activeTab, backgroundColor = "#f4f4f4" }) {
+export const colors = {
+  navy: "#1e3f68",
+  softBlue: "#b7c9dd",
+  panelBlue: "#657b94",
+  screen: "#f4f4f4",
+};
+
+export function ScreenShell({ children, activeTab, backgroundColor = colors.screen }) {
   return (
     <SafeAreaView style={[styles.safeArea, { backgroundColor }]}>
       <View style={styles.shell}>{children}</View>
@@ -21,7 +28,7 @@ export function Header({ title, onBack, large = false }) {
     <View style={[styles.header, large && styles.largeHeader]}>
       {onBack ? (
         <Pressable accessibilityLabel="Go back" onPress={onBack} style={styles.backButton}>
-          <Ionicons name="arrow-back-circle-outline" size={34} color="#b7c9dd" />
+          <Ionicons name="arrow-back-circle-outline" size={32} color={colors.softBlue} />
         </Pressable>
       ) : null}
       <Text style={[styles.headerTitle, large && styles.largeTitle]}>{title}</Text>
@@ -34,7 +41,7 @@ export function BottomNav({ activeTab, navigation }) {
     <View style={styles.bottomNav}>
       {tabs.map((tab) => {
         const active = tab.label === activeTab;
-        const color = active ? "#1f426d" : "#b7c9dd";
+        const color = active ? colors.navy : colors.softBlue;
 
         return (
           <Pressable
@@ -43,7 +50,7 @@ export function BottomNav({ activeTab, navigation }) {
             onPress={() => navigation.navigate(tab.route)}
             style={styles.tab}
           >
-            <Ionicons name={tab.icon} size={24} color={color} />
+            <Ionicons name={tab.icon} size={22} color={color} />
             <Text style={[styles.tabLabel, { color }]}>{tab.label}</Text>
             {active ? <View style={styles.activeDot} /> : <View style={styles.inactiveDot} />}
           </Pressable>
@@ -61,14 +68,14 @@ const styles = StyleSheet.create({
     flex: 1,
     alignSelf: "center",
     width: "100%",
-    maxWidth: 430,
-    backgroundColor: "#f4f4f4",
+    maxWidth: 400,
+    backgroundColor: colors.screen,
   },
   header: {
     height: 70,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#1f426d",
+    backgroundColor: colors.navy,
     borderTopLeftRadius: 34,
     borderTopRightRadius: 34,
   },
@@ -76,12 +83,12 @@ const styles = StyleSheet.create({
     height: 120,
   },
   headerTitle: {
-    color: "#b7c9dd",
+    color: colors.softBlue,
     fontSize: 20,
     fontWeight: "800",
   },
   largeTitle: {
-    fontSize: 32,
+    fontSize: 30,
   },
   backButton: {
     position: "absolute",
@@ -93,15 +100,16 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   bottomNav: {
-    height: 80,
+    height: 78,
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "#ffffff",
     paddingHorizontal: 10,
+    paddingBottom: 2,
   },
   tab: {
     flex: 1,
-    height: 58,
+    height: 54,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -115,7 +123,7 @@ const styles = StyleSheet.create({
     height: 4,
     marginTop: 4,
     borderRadius: 2,
-    backgroundColor: "#1f426d",
+    backgroundColor: colors.navy,
   },
   inactiveDot: {
     width: 4,

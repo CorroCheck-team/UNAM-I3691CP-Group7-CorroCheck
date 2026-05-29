@@ -116,13 +116,13 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    color: "#1f426d",
+    color: "#1e3f68",
     fontSize: 14,
     paddingVertical: 0,
   },
   forgotText: {
     marginTop: 196,
-    color: "#1f426d",
+    color: "#1e3f68",
     fontSize: 12,
     fontWeight: "500",
   },
@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginTop: 31,
     borderRadius: 24,
-    backgroundColor: "#1f426d",
+    backgroundColor: "#1e3f68",
     shadowColor: "#000000",
     shadowOpacity: 0.25,
     shadowRadius: 7,
@@ -151,11 +151,11 @@ const styles = StyleSheet.create({
     marginTop: 24,
   },
   signupPrompt: {
-    color: "#1f426d",
+    color: "#1e3f68",
     fontSize: 12,
   },
   signupText: {
-    color: "#1f426d",
+    color: "#1e3f68",
     fontSize: 12,
   },
 });
