@@ -1,6 +1,6 @@
+import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
 import {
-  Alert,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -11,7 +11,7 @@ import {
   View,
 } from "react-native";
 
-export default function SignUpScreen() {
+export default function SignUpScreen({ navigation }) {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [form, setForm] = useState({
@@ -21,178 +21,160 @@ export default function SignUpScreen() {
     confirm: "",
   });
 
-  const handleChange = (field, value) => {
+  const update = (field, value) => {
     setForm((current) => ({ ...current, [field]: value }));
   };
 
-  const handleSignup = () => {
-    if (!form.name || !form.email || !form.password || !form.confirm) {
-      Alert.alert("Missing details", "Please fill in all fields");
-      return;
-    }
-
-    if (form.password !== form.confirm) {
-      Alert.alert("Password mismatch", "Passwords do not match");
-      return;
-    }
-
-    Alert.alert("Success", "Account created successfully!");
-  };
-
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.screen}>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : undefined}
-        style={styles.keyboardView}
+        style={styles.content}
       >
-        <View style={styles.phone}>
-          <Text style={styles.title}>Create account</Text>
+        <Text style={styles.title}>Create account</Text>
 
-          <TextInput
-            autoCapitalize="words"
-            onChangeText={(value) => handleChange("name", value)}
-            placeholder="Enter your full name"
-            placeholderTextColor="#cbd5e1"
-            style={styles.input}
-            value={form.name}
-          />
-
-          <TextInput
-            autoCapitalize="none"
-            keyboardType="email-address"
-            onChangeText={(value) => handleChange("email", value)}
-            placeholder="Enter your Email address"
-            placeholderTextColor="#cbd5e1"
-            style={styles.input}
-            value={form.email}
-          />
-
-          <View style={styles.inputGroup}>
-            <TextInput
-              autoCapitalize="none"
-              onChangeText={(value) => handleChange("password", value)}
-              placeholder="Enter your password"
-              placeholderTextColor="#cbd5e1"
-              secureTextEntry={!showPassword}
-              style={[styles.input, styles.inputWithIcon]}
-              value={form.password}
-            />
-            <Pressable
-              accessibilityLabel="Toggle password visibility"
-              onPress={() => setShowPassword((current) => !current)}
-              style={styles.eyeButton}
-            >
-              <Text style={styles.eyeText}>{showPassword ? "Hide" : "Show"}</Text>
+        <Field
+          label="Full Name"
+          onChangeText={(value) => update("name", value)}
+          placeholder="Enter your full name"
+          value={form.name}
+        />
+        <Field
+          autoCapitalize="none"
+          keyboardType="email-address"
+          label="Email"
+          onChangeText={(value) => update("email", value)}
+          placeholder="Enter your Email address"
+          value={form.email}
+        />
+        <Field
+          action={
+            <Pressable onPress={() => setShowPassword((value) => !value)}>
+              <Ionicons
+                name={showPassword ? "eye-outline" : "eye-off-outline"}
+                size={20}
+                color="#b7c9dd"
+              />
             </Pressable>
-          </View>
-
-          <View style={styles.inputGroup}>
-            <TextInput
-              autoCapitalize="none"
-              onChangeText={(value) => handleChange("confirm", value)}
-              placeholder="Confirm your password"
-              placeholderTextColor="#cbd5e1"
-              secureTextEntry={!showConfirm}
-              style={[styles.input, styles.inputWithIcon]}
-              value={form.confirm}
-            />
-            <Pressable
-              accessibilityLabel="Toggle confirm password visibility"
-              onPress={() => setShowConfirm((current) => !current)}
-              style={styles.eyeButton}
-            >
-              <Text style={styles.eyeText}>{showConfirm ? "Hide" : "Show"}</Text>
+          }
+          label="Password"
+          onChangeText={(value) => update("password", value)}
+          placeholder="Enter your password"
+          secureTextEntry={!showPassword}
+          value={form.password}
+        />
+        <Field
+          action={
+            <Pressable onPress={() => setShowConfirm((value) => !value)}>
+              <Ionicons
+                name={showConfirm ? "eye-outline" : "eye-off-outline"}
+                size={20}
+                color="#b7c9dd"
+              />
             </Pressable>
-          </View>
+          }
+          label="Confirm password"
+          onChangeText={(value) => update("confirm", value)}
+          placeholder="Confirm your password"
+          secureTextEntry={!showConfirm}
+          value={form.confirm}
+        />
 
-          <Pressable onPress={handleSignup} style={styles.button}>
-            <Text style={styles.buttonText}>SIGN UP</Text>
+        <Pressable onPress={() => navigation.replace("Home")} style={styles.signupButton}>
+          <Text style={styles.signupText}>Sign Up</Text>
+        </Pressable>
+
+        <View style={styles.loginRow}>
+          <Text style={styles.loginPrompt}>Already have an account?</Text>
+          <Pressable onPress={() => navigation.navigate("Login")}>
+            <Text style={styles.loginText}>Login</Text>
           </Pressable>
-
-          <Text style={styles.text}>
-            Already have an account? <Text style={styles.link}>Sign in</Text>
-          </Text>
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
 
+function Field({ action, label, ...props }) {
+  return (
+    <View style={styles.field}>
+      <Text style={styles.label}>{label}</Text>
+      <View style={styles.inputRow}>
+        <TextInput
+          placeholderTextColor="#b7c9dd"
+          style={styles.input}
+          {...props}
+        />
+        {action}
+      </View>
+    </View>
+  );
+}
+
 const styles = StyleSheet.create({
-  container: {
+  screen: {
     flex: 1,
-    backgroundColor: "#eef1f5",
+    backgroundColor: "#1f426d",
   },
-  keyboardView: {
+  content: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 20,
-  },
-  phone: {
+    alignSelf: "center",
     width: "100%",
-    maxWidth: 480,
-    minHeight: 640,
-    justifyContent: "center",
-    paddingHorizontal: 20,
-    paddingVertical: 30,
-    borderRadius: 35,
-    backgroundColor: "#7a8ca5",
+    maxWidth: 430,
+    paddingHorizontal: 72,
+    paddingTop: 108,
+    backgroundColor: "#1f426d",
   },
   title: {
-    marginBottom: 25,
-    color: "#ffffff",
-    fontSize: 24,
-    fontWeight: "700",
-    textAlign: "center",
+    alignSelf: "flex-end",
+    marginBottom: 78,
+    color: "#b7c9dd",
+    fontSize: 25,
+    fontWeight: "800",
   },
-  inputGroup: {
-    position: "relative",
+  field: {
+    marginBottom: 17,
+  },
+  label: {
+    marginBottom: 5,
+    color: "#b7c9dd",
+    fontSize: 12,
+  },
+  inputRow: {
+    minHeight: 26,
+    flexDirection: "row",
+    alignItems: "center",
   },
   input: {
-    width: "100%",
-    height: 48,
-    marginBottom: 10,
-    paddingHorizontal: 15,
-    borderRadius: 25,
-    backgroundColor: "#1f3b63",
+    flex: 1,
     color: "#ffffff",
+    fontSize: 16,
+    paddingVertical: 0,
   },
-  inputWithIcon: {
-    paddingRight: 74,
+  signupButton: {
+    alignSelf: "center",
+    marginTop: 105,
+    paddingHorizontal: 18,
+    paddingVertical: 10,
   },
-  eyeButton: {
-    position: "absolute",
-    top: 0,
-    right: 6,
-    height: 48,
-    justifyContent: "center",
-    paddingHorizontal: 10,
+  signupText: {
+    color: "#b7c9dd",
+    fontSize: 26,
+    fontWeight: "900",
   },
-  eyeText: {
-    color: "#ffffff",
-    fontSize: 12,
-    fontWeight: "700",
-  },
-  button: {
+  loginRow: {
+    flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    height: 50,
-    marginTop: 15,
-    borderRadius: 25,
-    backgroundColor: "#0a2342",
+    gap: 24,
+    marginTop: 18,
   },
-  buttonText: {
-    color: "#ffffff",
-    fontWeight: "700",
-  },
-  text: {
-    marginTop: 15,
-    color: "#ffffff",
+  loginPrompt: {
+    color: "#b7c9dd",
     fontSize: 12,
-    textAlign: "center",
   },
-  link: {
-    textDecorationLine: "underline",
+  loginText: {
+    color: "#b7c9dd",
+    fontSize: 12,
   },
 });

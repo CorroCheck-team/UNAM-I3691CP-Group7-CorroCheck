@@ -1,15 +1,11 @@
 import { useEffect } from "react";
 import { Image, SafeAreaView, StyleSheet } from "react-native";
 
-const splashDesign = require("../../docs/designs/screens/Splash Screen.png");
+const splashDesign = require("../../docs/designs/UI designs/Splash Screen.png");
 
 export default function SplashScreen({ onFinish }) {
   useEffect(() => {
-    const timer = setTimeout(() => {
-      if (onFinish) {
-        onFinish();
-      }
-    }, 7000);
+    const timer = setTimeout(onFinish, 1800);
 
     return () => clearTimeout(timer);
   }, [onFinish]);
@@ -26,7 +22,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#202020",
+    backgroundColor: "#f4f4f4",
   },
   design: {
     width: "100%",
