@@ -1,19 +1,8 @@
 import { useState } from "react";
-import {
-  Alert,
-  KeyboardAvoidingView,
-  Platform,
-  Pressable,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from "react-native";
 
-export default function SignUpScreen() {
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirm, setShowConfirm] = useState(false);
+import DesignScreen, { box, designAssets, GhostInput, HitArea } from "../../components/DesignScreen";
+
+export default function SignUpScreen({ navigation }) {
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -21,178 +10,28 @@ export default function SignUpScreen() {
     confirm: "",
   });
 
-  const handleChange = (field, value) => {
+  const update = (field, value) => {
     setForm((current) => ({ ...current, [field]: value }));
   };
 
-  const handleSignup = () => {
-    if (!form.name || !form.email || !form.password || !form.confirm) {
-      Alert.alert("Missing details", "Please fill in all fields");
-      return;
-    }
-
-    if (form.password !== form.confirm) {
-      Alert.alert("Password mismatch", "Passwords do not match");
-      return;
-    }
-
-    Alert.alert("Success", "Account created successfully!");
-  };
-
   return (
-    <SafeAreaView style={styles.container}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : undefined}
-        style={styles.keyboardView}
-      >
-        <View style={styles.phone}>
-          <Text style={styles.title}>Create account</Text>
-
-          <TextInput
-            autoCapitalize="words"
-            onChangeText={(value) => handleChange("name", value)}
-            placeholder="Enter your full name"
-            placeholderTextColor="#cbd5e1"
-            style={styles.input}
-            value={form.name}
-          />
-
-          <TextInput
-            autoCapitalize="none"
-            keyboardType="email-address"
-            onChangeText={(value) => handleChange("email", value)}
-            placeholder="Enter your Email address"
-            placeholderTextColor="#cbd5e1"
-            style={styles.input}
-            value={form.email}
-          />
-
-          <View style={styles.inputGroup}>
-            <TextInput
-              autoCapitalize="none"
-              onChangeText={(value) => handleChange("password", value)}
-              placeholder="Enter your password"
-              placeholderTextColor="#cbd5e1"
-              secureTextEntry={!showPassword}
-              style={[styles.input, styles.inputWithIcon]}
-              value={form.password}
-            />
-            <Pressable
-              accessibilityLabel="Toggle password visibility"
-              onPress={() => setShowPassword((current) => !current)}
-              style={styles.eyeButton}
-            >
-              <Text style={styles.eyeText}>{showPassword ? "Hide" : "Show"}</Text>
-            </Pressable>
-          </View>
-
-          <View style={styles.inputGroup}>
-            <TextInput
-              autoCapitalize="none"
-              onChangeText={(value) => handleChange("confirm", value)}
-              placeholder="Confirm your password"
-              placeholderTextColor="#cbd5e1"
-              secureTextEntry={!showConfirm}
-              style={[styles.input, styles.inputWithIcon]}
-              value={form.confirm}
-            />
-            <Pressable
-              accessibilityLabel="Toggle confirm password visibility"
-              onPress={() => setShowConfirm((current) => !current)}
-              style={styles.eyeButton}
-            >
-              <Text style={styles.eyeText}>{showConfirm ? "Hide" : "Show"}</Text>
-            </Pressable>
-          </View>
-
-          <Pressable onPress={handleSignup} style={styles.button}>
-            <Text style={styles.buttonText}>SIGN UP</Text>
-          </Pressable>
-
-          <Text style={styles.text}>
-            Already have an account? <Text style={styles.link}>Sign in</Text>
-          </Text>
-        </View>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+    <DesignScreen source={designAssets.signUp}>
+      <GhostInput onChangeText={(value) => update("name", value)} style={box(16, 30, 62, 4)} value={form.name} />
+      <GhostInput onChangeText={(value) => update("email", value)} style={box(16, 38, 62, 4)} value={form.email} />
+      <GhostInput
+        onChangeText={(value) => update("password", value)}
+        secureTextEntry
+        style={box(16, 46, 62, 4)}
+        value={form.password}
+      />
+      <GhostInput
+        onChangeText={(value) => update("confirm", value)}
+        secureTextEntry
+        style={box(16, 54, 62, 4)}
+        value={form.confirm}
+      />
+      <HitArea onPress={() => navigation.replace("Home")} style={box(34, 70, 32, 7)} />
+      <HitArea onPress={() => navigation.navigate("Login")} style={box(60, 79, 22, 4)} />
+    </DesignScreen>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#eef1f5",
-  },
-  keyboardView: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 20,
-  },
-  phone: {
-    width: "100%",
-    maxWidth: 480,
-    minHeight: 640,
-    justifyContent: "center",
-    paddingHorizontal: 20,
-    paddingVertical: 30,
-    borderRadius: 35,
-    backgroundColor: "#7a8ca5",
-  },
-  title: {
-    marginBottom: 25,
-    color: "#ffffff",
-    fontSize: 24,
-    fontWeight: "700",
-    textAlign: "center",
-  },
-  inputGroup: {
-    position: "relative",
-  },
-  input: {
-    width: "100%",
-    height: 48,
-    marginBottom: 10,
-    paddingHorizontal: 15,
-    borderRadius: 25,
-    backgroundColor: "#1f3b63",
-    color: "#ffffff",
-  },
-  inputWithIcon: {
-    paddingRight: 74,
-  },
-  eyeButton: {
-    position: "absolute",
-    top: 0,
-    right: 6,
-    height: 48,
-    justifyContent: "center",
-    paddingHorizontal: 10,
-  },
-  eyeText: {
-    color: "#ffffff",
-    fontSize: 12,
-    fontWeight: "700",
-  },
-  button: {
-    alignItems: "center",
-    justifyContent: "center",
-    height: 50,
-    marginTop: 15,
-    borderRadius: 25,
-    backgroundColor: "#0a2342",
-  },
-  buttonText: {
-    color: "#ffffff",
-    fontWeight: "700",
-  },
-  text: {
-    marginTop: 15,
-    color: "#ffffff",
-    fontSize: 12,
-    textAlign: "center",
-  },
-  link: {
-    textDecorationLine: "underline",
-  },
-});
