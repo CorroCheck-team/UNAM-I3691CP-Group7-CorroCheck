@@ -1,20 +1,14 @@
 import { Image, ImageBackground, Pressable, StyleSheet, TextInput, View } from "react-native";
 
-export const designAssets = {
-  emptyHistory: require("../../docs/designs/UI designs/Empty History screen.png"),
-  error: require("../../docs/designs/UI designs/Error state.png"),
-  history: require("../../docs/designs/UI designs/History Screen.png"),
-  historyDetails: require("../../docs/designs/UI designs/History Details Screen.png"),
-  home: require("../../docs/designs/UI designs/Home Screen.png"),
-  loading: require("../../docs/designs/UI designs/Loading spinner.png"),
-  profile: require("../../docs/designs/UI designs/Profile screen.png"),
-  results: require("../../docs/designs/UI designs/Results Screen.png"),
-  selectType: require("../../docs/designs/UI designs/Select type dropdown.png"),
-  success: require("../../docs/designs/UI designs/Success alert.png"),
-  upload: require("../../docs/designs/UI designs/Upload Screen.png"),
+export const authAssets = {
+  forgotPassword: require("../../docs/designs/UI designs/Forgot password screen.png"),
+  login: require("../../docs/designs/UI designs/Login screen.png"),
+  resetSuccess: require("../../docs/designs/UI designs/reset link success.png"),
+  signUp: require("../../docs/designs/UI designs/Sign Up screen.png"),
+  splash: require("../../docs/designs/UI designs/Splash Screen.png"),
 };
 
-export function ImageScreen({ children, source }) {
+export function ScreenshotScreen({ children, source }) {
   return (
     <View style={styles.screen}>
       <ImageBackground fadeDuration={0} resizeMode="stretch" source={source} style={styles.image}>
@@ -24,24 +18,27 @@ export function ImageScreen({ children, source }) {
   );
 }
 
-export function DesignImage({ source, style }) {
-  return <Image fadeDuration={0} resizeMode="stretch" source={source} style={style} />;
-}
-
 export function HitBox({ onPress, style }) {
   return <Pressable onPress={onPress} style={({ pressed }) => [styles.hitBox, style, pressed && styles.pressed]} />;
 }
 
-export function OverlayInput({ multiline, onChangeText, secureTextEntry, style, value }) {
+export function OverlayInput({ onChangeText, secureTextEntry, style, value }) {
   return (
     <TextInput
       autoCapitalize="none"
-      multiline={multiline}
       onChangeText={onChangeText}
       secureTextEntry={secureTextEntry}
       style={[styles.input, style]}
       value={value}
     />
+  );
+}
+
+export function SuccessImageCard({ onPress }) {
+  return (
+    <Pressable onPress={onPress} style={({ pressed }) => [styles.successCard, pressed && styles.pressed]}>
+      <Image fadeDuration={0} resizeMode="stretch" source={authAssets.resetSuccess} style={styles.successImage} />
+    </Pressable>
   );
 }
 
@@ -72,9 +69,17 @@ const styles = StyleSheet.create({
     padding: 0,
     paddingHorizontal: 10,
     position: "absolute",
-    textAlignVertical: "top",
   },
   pressed: {
     opacity: 0.72,
+  },
+  successCard: {
+    height: 226,
+    maxWidth: 330,
+    width: "82%",
+  },
+  successImage: {
+    height: "100%",
+    width: "100%",
   },
 });
