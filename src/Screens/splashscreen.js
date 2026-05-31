@@ -1,13 +1,14 @@
 import { useEffect } from "react";
 
-import DesignScreen, { designAssets } from "../components/DesignScreen";
+import { authAssets, ScreenshotScreen } from "../components/AuthLayout";
 
-export default function SplashScreen({ onFinish }) {
+export default function SplashScreen({ navigation, onFinish }) {
   useEffect(() => {
-    const timer = setTimeout(onFinish, 4000);
+    const finish = onFinish || (() => navigation.replace("Login"));
+    const timer = setTimeout(finish, 3000);
 
     return () => clearTimeout(timer);
-  }, [onFinish]);
+  }, [navigation, onFinish]);
 
-  return <DesignScreen source={designAssets.splash} />;
+  return <ScreenshotScreen source={authAssets.splash} />;
 }
