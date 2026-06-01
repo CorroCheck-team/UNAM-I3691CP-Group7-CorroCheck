@@ -37,14 +37,6 @@ export default function ProfileScreen({ navigation }) {
         contentContainerStyle={styles.scroll}
         showsVerticalScrollIndicator={false}
       >
-        {/* Back button */}
-        <Pressable
-          onPress={() => navigation.goBack()}
-          style={({ pressed }) => [styles.backBtn, pressed && { opacity: 0.6 }]}
-        >
-          <Ionicons name="chevron-back-circle-outline" size={32} color="#1A3050" />
-        </Pressable>
-
         {/* Avatar */}
         <View style={styles.avatarWrapper}>
           <View style={styles.avatarCircle}>
@@ -130,13 +122,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingBottom: 40,
     paddingTop: 10,
-  },
-
-  // Back
-  backBtn: {
-    alignSelf: "flex-start",
-    marginLeft: 16,
-    marginBottom: 10,
   },
 
   // Avatar
