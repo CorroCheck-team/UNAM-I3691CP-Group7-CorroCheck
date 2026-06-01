@@ -41,15 +41,9 @@ export default function ResultScreen({ navigation, route }) {
     setShowSavedModal(true);
     setTimeout(() => {
       setShowSavedModal(false);
-      navigation.navigate("HistoryDetails", {
-        item: {
-          location,
-          corrosionType,
-          severity,
-          confidence,
-          notes,
-          time: `Today, ${new Date().toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" })}`,
-        },
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'MainTabs', params: { screen: 'History' } }],
       });
     }, 2500);
   };

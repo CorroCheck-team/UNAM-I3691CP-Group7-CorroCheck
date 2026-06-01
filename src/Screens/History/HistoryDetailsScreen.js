@@ -12,7 +12,6 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 
 export default function HistoryDetailsScreen({ navigation, route }) {
-  // Accept scan data passed via navigation params, or use fallback demo data
   const scan = route?.params?.scan || {
     photoURL: null,
     severity: "High",
@@ -22,6 +21,8 @@ export default function HistoryDetailsScreen({ navigation, route }) {
     date: "Today, 09:42 AM",
     notes: "Visible rust forming along the weld seam. Needs urgent attention.",
   };
+
+  const source = route?.params?.source || "History";
 
   const getSeverityColor = (severity) => {
     switch (severity?.toLowerCase()) {
@@ -46,7 +47,7 @@ export default function HistoryDetailsScreen({ navigation, route }) {
       <View style={styles.header}>
         <TouchableOpacity
           style={styles.backButton}
-          onPress={() => navigation.navigate('MainTabs')}
+          onPress={() => navigation.navigate("MainTabs", { screen: source })}
         >
           <Ionicons name="chevron-back-circle-outline" size={28} color="#FFFFFF" />
         </TouchableOpacity>
@@ -59,7 +60,7 @@ export default function HistoryDetailsScreen({ navigation, route }) {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        {/* Image Placeholder */}
+        {/* Image */}
         <View style={styles.imageContainer}>
           {scan.photoURL ? (
             <Image
@@ -92,7 +93,6 @@ export default function HistoryDetailsScreen({ navigation, route }) {
 
         {/* Detail Rows */}
         <View style={styles.detailsContainer}>
-          {/* Corrosion Type */}
           <View style={styles.detailRow}>
             <View style={styles.detailLeft}>
               <Ionicons name="flask-outline" size={18} color="#5B8BB0" />
@@ -101,7 +101,6 @@ export default function HistoryDetailsScreen({ navigation, route }) {
             <Text style={styles.detailValue}>{scan.corrosionType}</Text>
           </View>
 
-          {/* Location */}
           <View style={styles.detailRow}>
             <View style={styles.detailLeft}>
               <Ionicons name="location-outline" size={18} color="#5B8BB0" />
@@ -110,7 +109,6 @@ export default function HistoryDetailsScreen({ navigation, route }) {
             <Text style={styles.detailValue}>{scan.location}</Text>
           </View>
 
-          {/* Date & Time */}
           <View style={styles.detailRow}>
             <View style={styles.detailLeft}>
               <Ionicons name="calendar-outline" size={18} color="#5B8BB0" />
@@ -119,7 +117,6 @@ export default function HistoryDetailsScreen({ navigation, route }) {
             <Text style={styles.detailValue}>{scan.date}</Text>
           </View>
 
-          {/* Notes */}
           <View style={[styles.detailRow, styles.notesRow]}>
             <View style={styles.detailLeft}>
               <Ionicons name="document-text-outline" size={18} color="#5B8BB0" />
@@ -132,14 +129,16 @@ export default function HistoryDetailsScreen({ navigation, route }) {
         </View>
       </ScrollView>
 
-      {/* Back to History Button */}
+      {/* Footer Button */}
       <View style={styles.footer}>
         <TouchableOpacity
           style={styles.backToHistoryButton}
-          onPress={() => navigation.goBack()}
+          onPress={() => navigation.navigate("MainTabs", { screen: source })}
           activeOpacity={0.85}
         >
-          <Text style={styles.backToHistoryText}>Back to History</Text>
+          <Text style={styles.backToHistoryText}>
+            {source === "Home" ? "Back to Home" : "Back to History"}
+          </Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -151,8 +150,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#F4F7FA",
   },
-
-  // Header
   header: {
     flexDirection: "row",
     alignItems: "center",
@@ -173,8 +170,6 @@ const styles = StyleSheet.create({
   headerRight: {
     width: 32,
   },
-
-  // Scroll
   scrollView: {
     flex: 1,
   },
@@ -183,8 +178,6 @@ const styles = StyleSheet.create({
     paddingBottom: 24,
     gap: 16,
   },
-
-  // Image
   imageContainer: {
     borderRadius: 14,
     overflow: "hidden",
@@ -201,8 +194,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     backgroundColor: "#C8D4E0",
   },
-
-  // Severity Card
   severityCard: {
     backgroundColor: "#FFFFFF",
     borderRadius: 14,
@@ -248,8 +239,6 @@ const styles = StyleSheet.create({
     color: "#D32F2F",
     fontWeight: "500",
   },
-
-  // Detail Rows
   detailsContainer: {
     backgroundColor: "#FFFFFF",
     borderRadius: 14,
@@ -299,8 +288,6 @@ const styles = StyleSheet.create({
     color: "#334E68",
     lineHeight: 20,
   },
-
-  // Footer
   footer: {
     padding: 16,
     backgroundColor: "#F4F7FA",
