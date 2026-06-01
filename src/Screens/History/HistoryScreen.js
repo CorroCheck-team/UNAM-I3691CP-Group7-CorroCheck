@@ -149,7 +149,7 @@ export default function HistoryScreen({ navigation }) {
   });
 
   const handleCardPress = (item) => {
-    navigation.navigate("HistoryDetails", { inspection: item });
+    navigation.navigate("HistoryDetails", { inspection: item, source: "History" });
   };
 
   return (

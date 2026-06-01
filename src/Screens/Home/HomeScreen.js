@@ -140,7 +140,7 @@ export default function HomeScreen({ navigation }) {
           <TouchableOpacity
             key={item.id}
             style={styles.activityCard}
-            onPress={() => navigation.navigate("HistoryDetails", { item })}
+            onPress={() => navigation.navigate("HistoryDetails", { item, source: "Home" })}
           >
             <View
               style={[
