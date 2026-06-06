@@ -55,3 +55,10 @@ CorroCheck is a mobile application designed to modernize and simplify the proces
 - Never push directly to `main`
 - Every feature gets its own branch: `feature/your-feature name`
 - When done, open a Pull Request and wait for the Project Manager or GitHub Manager to review and approve it
+
+---
+
+## Figma Prototype
+
+View the CorroCheck prototype here:
+https://www.figma.com/proto/9Tr9lqcNSDtei18gyi0bn8/Corrosion-App-UI-Design-System?node-id=1-2&t=bWEaf3XfufAsTNH4-1
