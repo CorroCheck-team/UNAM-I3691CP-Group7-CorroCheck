@@ -46,8 +46,8 @@ function getLeftBorderColor(severity) {
 
 // ── Inspection Card ────────────────────────────────────────────────────────
 function InspectionCard({ item, onPress }) {
-  const severityColors = getSeverityColors(item.severity);
-  const borderColor = getLeftBorderColor(item.severity);
+  const severityColors = getSeverityColors(severity);
+  const borderColor = getLeftBorderColor(severity); 
 
   return (
     <Pressable
@@ -68,11 +68,17 @@ function InspectionCard({ item, onPress }) {
 
       {/* Info */}
       <View style={styles.cardInfo}>
-        <Text style={styles.cardLocation} numberOfLines={2}>
-          {item.location}
-        </Text>
-        <Text style={styles.cardDate}>{item.date}</Text>
-        <Text style={styles.cardType}>{item.corrosionType}</Text>
+<Text style={styles.cardLocation} numberOfLines={2}>
+  {item.location || "Unknown Location"}
+</Text>
+        <Text style={styles.cardDate}>
+  {item.createdAt?.toDate
+    ? item.createdAt.toDate().toLocaleString()
+    : "No date"}
+</Text>
+        <Text style={styles.cardType}>
+  {item.corrosionType || item.corrosionLevel || "Unknown Type"}
+</Text>
       </View>
 
       {/* Severity badge + chevron */}
@@ -118,16 +124,17 @@ export default function HistoryScreen({ navigation }) {
   }, []);
 
   // Filter inspections
-  const filtered = inspections.filter((item) => {
+const filtered = inspections.filter((item) => {
 
-    const q = searchQuery.toLowerCase();
+  const q = searchQuery.toLowerCase();
 
-    return (
-      item.location.toLowerCase().includes(q) ||
-      item.corrosionType.toLowerCase().includes(q) ||
-      item.severity.toLowerCase().includes(q)
-    );
-  });
+  return (
+    (item.location || "").toLowerCase().includes(q) ||
+    (item.corrosionType || "").toLowerCase().includes(q) ||
+    (item.severity || "").toLowerCase().includes(q) ||
+    (item.corrosionLevel || "").toLowerCase().includes(q)
+  );
+});
 
   const handleCardPress = (item) => {
     navigation.navigate("HistoryDetails", { inspection: item, source: "History" });

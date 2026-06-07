@@ -52,7 +52,7 @@ export default function UploadScreen() {
         photoURL: photoURL,
         createdAt: serverTimestamp(),
         corrosionLevel: "Medium",
-        inspector: "Princessa",
+        inspector: "Elizabeth",
       });
 
       Alert.alert("Success", "Inspection uploaded");
