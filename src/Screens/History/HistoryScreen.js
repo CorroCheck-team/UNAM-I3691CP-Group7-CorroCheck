@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   FlatList,
   Image,
@@ -11,58 +11,11 @@ import {
   View,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
+import { db } from "../../../firebase/config";
 
 // ── Sample data (replace with Firestore data) ──────────────────────────────
-const SAMPLE_INSPECTIONS = [
-  {
-    id: "1",
-    location: "Pipeline Section B-7",
-    date: "Today, 09:42 AM",
-    corrosionType: "Galvanic",
-    severity: "High",
-    photoURL: null,
-  },
-  {
-    id: "2",
-    location: "Tank Wall — Zone 3",
-    date: "Today, 08:15 AM",
-    corrosionType: "Pitting",
-    severity: "Moderate",
-    photoURL: null,
-  },
-  {
-    id: "3",
-    location: "Bridge Beam C-12",
-    date: "Yesterday, 04:30 PM",
-    corrosionType: "Uniform",
-    severity: "Low",
-    photoURL: null,
-  },
-  {
-    id: "4",
-    location: "Steel Column D-4",
-    date: "Yesterday, 01:10 PM",
-    corrosionType: "Crevice",
-    severity: "High",
-    photoURL: null,
-  },
-  {
-    id: "5",
-    location: "Pipeline Section B-7",
-    date: "Today, 09:42 AM",
-    corrosionType: "Galvanic",
-    severity: "High",
-    photoURL: null,
-  },
-  {
-    id: "6",
-    location: "Tank Wall — Zone 3",
-    date: "Today, 09:15 AM",
-    corrosionType: "Pitting",
-    severity: "Moderate",
-    photoURL: null,
-  },
-];
+
 
 // ── Severity helpers ───────────────────────────────────────────────────────
 function getSeverityColors(severity) {
@@ -137,10 +90,38 @@ function InspectionCard({ item, onPress }) {
 
 // ── Main Screen ────────────────────────────────────────────────────────────
 export default function HistoryScreen({ navigation }) {
-  const [searchQuery, setSearchQuery] = useState("");
 
-  const filtered = SAMPLE_INSPECTIONS.filter((item) => {
+  // States
+  const [searchQuery, setSearchQuery] = useState("");
+  const [inspections, setInspections] = useState([]);
+
+  // Firestore listener
+  useEffect(() => {
+
+    const q = query(
+      collection(db, "inspections"),
+      orderBy("createdAt", "desc")
+    );
+
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+
+      const inspectionList = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
+      setInspections(inspectionList);
+    });
+
+    return () => unsubscribe();
+
+  }, []);
+
+  // Filter inspections
+  const filtered = inspections.filter((item) => {
+
     const q = searchQuery.toLowerCase();
+
     return (
       item.location.toLowerCase().includes(q) ||
       item.corrosionType.toLowerCase().includes(q) ||
