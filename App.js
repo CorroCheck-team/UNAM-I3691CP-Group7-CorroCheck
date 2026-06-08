@@ -1,5 +1,5 @@
-import SignUpScreen from "./src/Screens/Auth/SignUpScreen";
+import AppNavigation from "./src/Navigation/AppNavigation";
 
 export default function App() {
-  return <SignUpScreen />;
+  return <AppNavigation />;
 }
