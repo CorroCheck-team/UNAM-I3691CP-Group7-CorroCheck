@@ -37,7 +37,9 @@ export default function HistoryDetailsScreen({ navigation, route }) {
     }
   };
 
-  const severityColor = getSeverityColor(scan.severity);
+  const severity = item.severity || item.corrosionLevel || "Low";
+
+const severityColors = getSeverityColors(severity);
 
   return (
     <SafeAreaView style={styles.safeArea}>
