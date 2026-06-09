@@ -15,23 +15,22 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import * as Location from "expo-location";
-import { db, auth } from "../../services/firebase/firebaseConfig";
+import { auth } from "../../services/firebase/firebaseConfig";
 import { uploadImageToFirebase } from "../../services/uploadService";
 
-// ── FR004: Corrosion type options ──────────────────────────────────────────
-const CORROSION_TYPES = ["Uniform", "Galvanic", "Pitting", "Crevice"];
+const CORROSION_TYPES = ["Galvanic", "Pitting", "Crevice", "Oxidation-Corrosion"];
+
+const BACKEND_URL = "http://10.222.224.174:5000";
 
 export default function SubmissionScreen({ navigation }) {
   const [manualLocation, setManualLocation] = useState("");
   const [notes, setNotes] = useState("");
   const [photoUri, setPhotoUri] = useState(null);
   const [gpsLocation, setGpsLocation] = useState("Auto-detecting GPS...");
-  const [corrosionType, setCorrosionType] = useState(null); // ✅ FR004
-
+  const [corrosionType, setCorrosionType] = useState(null);
   const [showAnalyzing, setShowAnalyzing] = useState(false);
   const [showError, setShowError] = useState(false);
 
-  // ✅ Get GPS on screen load
   useEffect(() => {
     (async () => {
       const { status } = await Location.requestForegroundPermissionsAsync();
@@ -46,7 +45,21 @@ export default function SubmissionScreen({ navigation }) {
     })();
   }, []);
 
-  // ✅ Image picker
+  const handleOpenCamera = async () => {
+    const { status } = await ImagePicker.requestCameraPermissionsAsync();
+    if (status !== "granted") {
+      Alert.alert("Permission needed", "Camera permission is required");
+      return;
+    }
+    const result = await ImagePicker.launchCameraAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      quality: 1,
+    });
+    if (!result.canceled) {
+      setPhotoUri(result.assets[0].uri);
+    }
+  };
+
   const handlePickImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -57,18 +70,34 @@ export default function SubmissionScreen({ navigation }) {
     }
   };
 
+  const handlePhotoPress = () => {
+    Alert.alert("Add Photo", "Choose an option", [
+      { text: "Take Photo", onPress: handleOpenCamera },
+      { text: "Choose from Gallery", onPress: handlePickImage },
+      { text: "Cancel", style: "cancel" },
+    ]);
+  };
+
+  const convertToBase64 = async (uri) => {
+    const response = await fetch(uri);
+    const blob = await response.blob();
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  };
+
   const handleSubmit = async () => {
     if (!photoUri) {
       Alert.alert("Error", "Please select a photo first");
       return;
     }
-
-    // ✅ FR004: corrosionType is now required
     if (!corrosionType) {
       Alert.alert("Error", "Please select a corrosion type");
       return;
     }
-
     const userId = auth.currentUser?.uid;
     if (!userId) {
       Alert.alert("Error", "You must be logged in");
@@ -78,17 +107,34 @@ export default function SubmissionScreen({ navigation }) {
     setShowAnalyzing(true);
 
     try {
-      // ✅ Step 1: Upload image to Firebase Storage (Elizabeth's service)
+      // Step 1: Upload image to Firebase Storage
       const photoURL = await uploadImageToFirebase(photoUri);
 
-      // ✅ Step 2: Navigate to Results screen
-      // Results screen calls Natangwe's Roboflow backend, then saves to Firestore (FR008)
+      // Step 2: Convert image to base64 for Roboflow
+      const base64Image = await convertToBase64(photoUri);
+
+      // Step 3: Send to Roboflow backend
+      const response = await fetch(`${BACKEND_URL}/analyze-corrosion`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ image: base64Image }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Backend analysis failed");
+      }
+
+      const aiResult = await response.json();
+
       setShowAnalyzing(false);
 
+      // Step 4: Navigate to Results with everything
       navigation.navigate("Results", {
         photoURL,
-        corrosionType,                          // ✅ FR004 — passed to Results for Firestore save
-        location: manualLocation || gpsLocation, // ✅ FR005 / FR006
+        corrosionType: aiResult.corrosionType || corrosionType,
+        severity: aiResult.severity || "Unknown",
+        confidence: aiResult.confidence || 0,
+        location: manualLocation || gpsLocation,
         notes,
         userId,
       });
@@ -102,8 +148,6 @@ export default function SubmissionScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#1A3050" />
-
-      {/* Header */}
       <View style={styles.header}>
         <Text style={styles.headerTitle}>New Inspection</Text>
       </View>
@@ -114,8 +158,7 @@ export default function SubmissionScreen({ navigation }) {
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
       >
-        {/* Photo upload area */}
-        <TouchableOpacity style={styles.photoArea} onPress={handlePickImage}>
+        <TouchableOpacity style={styles.photoArea} onPress={handlePhotoPress}>
           {photoUri ? (
             <Image source={{ uri: photoUri }} style={styles.photoPreview} resizeMode="cover" />
           ) : (
@@ -126,38 +169,27 @@ export default function SubmissionScreen({ navigation }) {
           )}
         </TouchableOpacity>
 
-        {/* ✅ FR004: Corrosion type selector */}
-        <Text style={styles.label}>Corrosion type <Text style={styles.required}>*</Text></Text>
+        <Text style={styles.label}>Corrosion type</Text>
         <View style={styles.corrosionTypeRow}>
           {CORROSION_TYPES.map((type) => (
             <TouchableOpacity
               key={type}
-              style={[
-                styles.typeChip,
-                corrosionType === type && styles.typeChipSelected,
-              ]}
+              style={[styles.typeChip, corrosionType === type && styles.typeChipSelected]}
               onPress={() => setCorrosionType(type)}
             >
-              <Text
-                style={[
-                  styles.typeChipText,
-                  corrosionType === type && styles.typeChipTextSelected,
-                ]}
-              >
+              <Text style={[styles.typeChipText, corrosionType === type && styles.typeChipTextSelected]}>
                 {type}
               </Text>
             </TouchableOpacity>
           ))}
         </View>
 
-        {/* GPS Location */}
         <Text style={styles.label}>Location</Text>
         <View style={styles.gpsInputWrapper}>
           <Ionicons name="location-outline" size={16} color="#8AAAC8" style={{ marginRight: 8 }} />
           <Text style={styles.gpsText}>{gpsLocation}</Text>
         </View>
 
-        {/* Manual Location override */}
         <Text style={styles.labelManual}>
           Location <Text style={styles.labelOverride}>(manual override)</Text>
         </Text>
@@ -171,7 +203,6 @@ export default function SubmissionScreen({ navigation }) {
           />
         </View>
 
-        {/* Notes */}
         <Text style={styles.label}>Notes</Text>
         <View style={styles.notesWrapper}>
           <TextInput
@@ -185,7 +216,6 @@ export default function SubmissionScreen({ navigation }) {
           />
         </View>
 
-        {/* Submit button */}
         <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
           <Ionicons name="share-outline" size={20} color="#FFFFFF" style={{ marginRight: 10 }} />
           <Text style={styles.submitText}>Submit Inspection</Text>
@@ -194,7 +224,6 @@ export default function SubmissionScreen({ navigation }) {
         <View style={{ height: 20 }} />
       </ScrollView>
 
-      {/* Analyzing Modal */}
       <Modal visible={showAnalyzing} transparent animationType="fade">
         <View style={styles.modalOverlay}>
           <View style={styles.statusCard}>
@@ -205,18 +234,8 @@ export default function SubmissionScreen({ navigation }) {
         </View>
       </Modal>
 
-      {/* Error Modal */}
-      <Modal
-        visible={showError}
-        transparent
-        animationType="fade"
-        onRequestClose={() => setShowError(false)}
-      >
-        <TouchableOpacity
-          style={styles.modalOverlay}
-          activeOpacity={1}
-          onPress={() => setShowError(false)}
-        >
+      <Modal visible={showError} transparent animationType="fade" onRequestClose={() => setShowError(false)}>
+        <TouchableOpacity style={styles.modalOverlay} activeOpacity={1} onPress={() => setShowError(false)}>
           <View style={styles.statusCard}>
             <View style={styles.errorCircle}>
               <Ionicons name="close" size={40} color="#E53935" />
@@ -241,17 +260,13 @@ const styles = StyleSheet.create({
   photoPlaceholderText: { color: "#FFFFFF", fontSize: 14, fontWeight: "500" },
   photoPreview: { width: "100%", height: "100%" },
   label: { color: "#1A3050", fontSize: 13, fontWeight: "500", marginBottom: 6, marginLeft: 2 },
-  required: { color: "#E53935" },
   labelManual: { fontSize: 13, fontWeight: "500", marginBottom: 6, marginLeft: 2, color: "#1A3050" },
   labelOverride: { color: "#8AAAC8", fontWeight: "400" },
-
-  // ✅ FR004: corrosion type chip styles
   corrosionTypeRow: { flexDirection: "row", flexWrap: "wrap", gap: 8, marginBottom: 14 },
   typeChip: { borderWidth: 1.5, borderColor: "#A8BDD0", borderRadius: 20, paddingHorizontal: 16, paddingVertical: 8, backgroundColor: "#FFFFFF" },
   typeChipSelected: { backgroundColor: "#1A3050", borderColor: "#1A3050" },
   typeChipText: { color: "#5A7A9A", fontSize: 13, fontWeight: "500" },
   typeChipTextSelected: { color: "#FFFFFF" },
-
   gpsInputWrapper: { flexDirection: "row", alignItems: "center", backgroundColor: "#FFFFFF", borderRadius: 10, paddingHorizontal: 16, height: 48, marginBottom: 14, borderWidth: 1, borderColor: "#D8E3EE" },
   gpsText: { color: "#A8BDD0", fontSize: 14 },
   inputWrapper: { backgroundColor: "#FFFFFF", borderRadius: 10, paddingHorizontal: 16, height: 48, marginBottom: 14, justifyContent: "center", borderWidth: 1, borderColor: "#D8E3EE" },
@@ -261,7 +276,7 @@ const styles = StyleSheet.create({
   submitButton: { backgroundColor: "#1A3050", borderRadius: 14, paddingVertical: 18, flexDirection: "row", alignItems: "center", justifyContent: "center" },
   submitText: { color: "#FFFFFF", fontSize: 16, fontWeight: "700", letterSpacing: 0.3 },
   modalOverlay: { flex: 1, backgroundColor: "rgba(0,0,0,0.45)", alignItems: "center", justifyContent: "center" },
-  statusCard: { backgroundColor: "#FFFFFF", borderRadius: 20, paddingVertical: 40, paddingHorizontal: 40, alignItems: "center", width: "78%", shadowColor: "#000", shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.12, shadowRadius: 12, elevation: 8 },
+  statusCard: { backgroundColor: "#FFFFFF", borderRadius: 20, paddingVertical: 40, paddingHorizontal: 40, alignItems: "center", width: "78%", elevation: 8 },
   statusTitle: { color: "#1A3050", fontSize: 18, fontWeight: "700", marginBottom: 8, textAlign: "center" },
   statusSubtitle: { color: "#5A7A9A", fontSize: 14, textAlign: "center", lineHeight: 22 },
   errorCircle: { width: 80, height: 80, borderRadius: 40, backgroundColor: "#FFCDD2", alignItems: "center", justifyContent: "center", marginBottom: 20 },
