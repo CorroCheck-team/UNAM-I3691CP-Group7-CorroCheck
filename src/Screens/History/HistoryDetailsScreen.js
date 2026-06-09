@@ -12,34 +12,36 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 
 export default function HistoryDetailsScreen({ navigation, route }) {
-  const scan = route?.params?.scan || {
+  // ✅ fixed: reads 'inspection' not 'scan'
+  const scan = route?.params?.inspection || {
     photoURL: null,
     severity: "High",
     confidence: 92,
     corrosionType: "Galvanic",
     location: "Pipeline Section B-7",
-    date: "Today, 09:42 AM",
+    date: null,
     notes: "Visible rust forming along the weld seam. Needs urgent attention.",
   };
 
   const source = route?.params?.source || "History";
 
+  // ✅ fixed: defined properly here
   const getSeverityColor = (severity) => {
     switch (severity?.toLowerCase()) {
-      case "high":
-        return "#D32F2F";
-      case "medium":
-        return "#F57C00";
-      case "low":
-        return "#388E3C";
-      default:
-        return "#D32F2F";
+      case "high":   return "#D32F2F";
+      case "medium": return "#F57C00";
+      case "low":    return "#388E3C";
+      default:       return "#D32F2F";
     }
   };
 
-  const severity = item.severity || item.corrosionLevel || "Low";
+  // ✅ fixed: uses scan.severity
+  const severityColor = getSeverityColor(scan.severity);
 
-const severityColors = getSeverityColors(severity);
+  // ✅ fixed: formats Firestore Timestamp properly
+  const formattedDate = scan.date?.toDate
+    ? scan.date.toDate().toLocaleString()
+    : scan.date || "No date";
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -116,7 +118,7 @@ const severityColors = getSeverityColors(severity);
               <Ionicons name="calendar-outline" size={18} color="#5B8BB0" />
               <Text style={styles.detailLabel}>Date & Time</Text>
             </View>
-            <Text style={styles.detailValue}>{scan.date}</Text>
+            <Text style={styles.detailValue}>{formattedDate}</Text>
           </View>
 
           <View style={[styles.detailRow, styles.notesRow]}>
@@ -148,162 +150,31 @@ const severityColors = getSeverityColors(severity);
 }
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: "#F4F7FA",
-  },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    backgroundColor: "#1A3050",
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-  },
-  backButton: {
-    padding: 2,
-  },
-  headerTitle: {
-    color: "#FFFFFF",
-    fontSize: 18,
-    fontWeight: "600",
-    letterSpacing: 0.3,
-  },
-  headerRight: {
-    width: 32,
-  },
-  scrollView: {
-    flex: 1,
-  },
-  scrollContent: {
-    padding: 16,
-    paddingBottom: 24,
-    gap: 16,
-  },
-  imageContainer: {
-    borderRadius: 14,
-    overflow: "hidden",
-    backgroundColor: "#D0D8E4",
-    height: 200,
-  },
-  image: {
-    width: "100%",
-    height: "100%",
-  },
-  imagePlaceholder: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#C8D4E0",
-  },
-  severityCard: {
-    backgroundColor: "#FFFFFF",
-    borderRadius: 14,
-    flexDirection: "row",
-    overflow: "hidden",
-    shadowColor: "#1A3050",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.07,
-    shadowRadius: 6,
-    elevation: 2,
-  },
-  severityAccent: {
-    width: 5,
-    borderRadius: 3,
-    margin: 10,
-  },
-  severityContent: {
-    flex: 1,
-    alignItems: "center",
-    paddingVertical: 20,
-    paddingRight: 16,
-  },
-  severityLabel: {
-    fontSize: 11,
-    fontWeight: "600",
-    letterSpacing: 1.5,
-    color: "#8AAAC8",
-    marginBottom: 4,
-  },
-  severityValue: {
-    fontSize: 32,
-    fontWeight: "700",
-    marginBottom: 10,
-  },
-  confidenceBadge: {
-    backgroundColor: "#FDECEA",
-    paddingHorizontal: 14,
-    paddingVertical: 5,
-    borderRadius: 20,
-  },
-  confidenceText: {
-    fontSize: 13,
-    color: "#D32F2F",
-    fontWeight: "500",
-  },
-  detailsContainer: {
-    backgroundColor: "#FFFFFF",
-    borderRadius: 14,
-    overflow: "hidden",
-    shadowColor: "#1A3050",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.07,
-    shadowRadius: 6,
-    elevation: 2,
-  },
-  detailRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    borderBottomWidth: 1,
-    borderBottomColor: "#F0F4F8",
-  },
-  notesRow: {
-    alignItems: "flex-start",
-    flexDirection: "column",
-    borderBottomWidth: 0,
-    gap: 8,
-  },
-  detailLeft: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-  },
-  detailLabel: {
-    fontSize: 14,
-    color: "#5B8BB0",
-    fontWeight: "500",
-  },
-  detailValue: {
-    fontSize: 14,
-    color: "#1A3050",
-    fontWeight: "500",
-    textAlign: "right",
-    flexShrink: 1,
-    marginLeft: 12,
-  },
-  notesText: {
-    textAlign: "left",
-    marginLeft: 0,
-    color: "#334E68",
-    lineHeight: 20,
-  },
-  footer: {
-    padding: 16,
-    backgroundColor: "#F4F7FA",
-  },
-  backToHistoryButton: {
-    backgroundColor: "#1A3050",
-    borderRadius: 12,
-    paddingVertical: 16,
-    alignItems: "center",
-  },
-  backToHistoryText: {
-    color: "#FFFFFF",
-    fontSize: 16,
-    fontWeight: "600",
-    letterSpacing: 0.3,
-  },
+  safeArea: { flex: 1, backgroundColor: "#F4F7FA" },
+  header: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", backgroundColor: "#1A3050", paddingHorizontal: 16, paddingVertical: 14 },
+  backButton: { padding: 2 },
+  headerTitle: { color: "#FFFFFF", fontSize: 18, fontWeight: "600", letterSpacing: 0.3 },
+  headerRight: { width: 32 },
+  scrollView: { flex: 1 },
+  scrollContent: { padding: 16, paddingBottom: 24, gap: 16 },
+  imageContainer: { borderRadius: 14, overflow: "hidden", backgroundColor: "#D0D8E4", height: 200 },
+  image: { width: "100%", height: "100%" },
+  imagePlaceholder: { flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: "#C8D4E0" },
+  severityCard: { backgroundColor: "#FFFFFF", borderRadius: 14, flexDirection: "row", overflow: "hidden", shadowColor: "#1A3050", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.07, shadowRadius: 6, elevation: 2 },
+  severityAccent: { width: 5, borderRadius: 3, margin: 10 },
+  severityContent: { flex: 1, alignItems: "center", paddingVertical: 20, paddingRight: 16 },
+  severityLabel: { fontSize: 11, fontWeight: "600", letterSpacing: 1.5, color: "#8AAAC8", marginBottom: 4 },
+  severityValue: { fontSize: 32, fontWeight: "700", marginBottom: 10 },
+  confidenceBadge: { backgroundColor: "#FDECEA", paddingHorizontal: 14, paddingVertical: 5, borderRadius: 20 },
+  confidenceText: { fontSize: 13, color: "#D32F2F", fontWeight: "500" },
+  detailsContainer: { backgroundColor: "#FFFFFF", borderRadius: 14, overflow: "hidden", shadowColor: "#1A3050", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.07, shadowRadius: 6, elevation: 2 },
+  detailRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 16, paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: "#F0F4F8" },
+  notesRow: { alignItems: "flex-start", flexDirection: "column", borderBottomWidth: 0, gap: 8 },
+  detailLeft: { flexDirection: "row", alignItems: "center", gap: 8 },
+  detailLabel: { fontSize: 14, color: "#5B8BB0", fontWeight: "500" },
+  detailValue: { fontSize: 14, color: "#1A3050", fontWeight: "500", textAlign: "right", flexShrink: 1, marginLeft: 12 },
+  notesText: { textAlign: "left", marginLeft: 0, color: "#334E68", lineHeight: 20 },
+  footer: { padding: 16, backgroundColor: "#F4F7FA" },
+  backToHistoryButton: { backgroundColor: "#1A3050", borderRadius: 12, paddingVertical: 16, alignItems: "center" },
+  backToHistoryText: { color: "#FFFFFF", fontSize: 16, fontWeight: "600", letterSpacing: 0.3 },
 });
