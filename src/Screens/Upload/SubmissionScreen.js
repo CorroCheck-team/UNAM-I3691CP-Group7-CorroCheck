@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import * as FileSystem from 'expo-file-system';
 import {
   View,
   Text,
@@ -79,14 +80,10 @@ export default function SubmissionScreen({ navigation }) {
   };
 
   const convertToBase64 = async (uri) => {
-    const response = await fetch(uri);
-    const blob = await response.blob();
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = reject;
-      reader.readAsDataURL(blob);
+    const base64 = await FileSystem.readAsStringAsync(uri, {
+      encoding: FileSystem.EncodingType.Base64,
     });
+    return `data:image/jpeg;base64,${base64}`;
   };
 
   const handleSubmit = async () => {
