@@ -9,29 +9,29 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { auth } from "../../services/firebase/firebaseConfig";
-import { getHistory } from "../../../backend/services/firestoreService";
+import { getHistory } from "../../services/firebase/firestoreService";
 
 function getSeverityColor(severity) {
   switch (severity) {
-    case "High": return "#E53935";
-    case "Moderate": return "#FB8C00";
-    case "Low": return "#43A047";
-    default: return "#8AAAC8";
+    case "High":   return "#E53935";
+    case "Medium": return "#FB8C00";
+    case "Low":    return "#43A047";
+    default:       return "#8AAAC8";
   }
 }
 
 function getSeverityBadgeStyle(severity) {
   switch (severity) {
-    case "High": return { backgroundColor: "#FFCDD2" };
-    case "Moderate": return { backgroundColor: "#FFE0B2" };
-    case "Low": return { backgroundColor: "#C8E6C9" };
-    default: return { backgroundColor: "#E0E0E0" };
+    case "High":   return { backgroundColor: "#FFCDD2" };
+    case "Medium": return { backgroundColor: "#FFE0B2" };
+    case "Low":    return { backgroundColor: "#C8E6C9" };
+    default:       return { backgroundColor: "#E0E0E0" };
   }
 }
 
 export default function HomeScreen({ navigation }) {
   const [userName, setUserName] = useState("Inspector");
-  const [stats, setStats] = useState({ low: 0, moderate: 0, high: 0, total: 0 });
+  const [stats, setStats] = useState({ low: 0, medium: 0, high: 0, total: 0 });
   const [recentActivity, setRecentActivity] = useState([]);
 
   const greeting = () => {
@@ -52,10 +52,10 @@ export default function HomeScreen({ navigation }) {
   const loadData = async (userId) => {
     try {
       const reports = await getHistory(userId);
-      const low = reports.filter(r => r.severity === "Low").length;
-      const moderate = reports.filter(r => r.severity === "Moderate").length;
-      const high = reports.filter(r => r.severity === "High").length;
-      setStats({ low, moderate, high, total: reports.length });
+      const low    = reports.filter(r => r.severity === "Low").length;
+      const medium = reports.filter(r => r.severity === "Medium").length;
+      const high   = reports.filter(r => r.severity === "High").length;
+      setStats({ low, medium, high, total: reports.length });
       setRecentActivity(reports.slice(0, 3));
     } catch (error) {
       console.error("Error loading home data:", error);
@@ -87,8 +87,8 @@ export default function HomeScreen({ navigation }) {
         </View>
         <View style={styles.statItem}>
           <View style={[styles.statDot, { backgroundColor: "#FB8C00" }]} />
-          <Text style={styles.statNumber}>{stats.moderate}</Text>
-          <Text style={styles.statLabel}>Moderate</Text>
+          <Text style={styles.statNumber}>{stats.medium}</Text>
+          <Text style={styles.statLabel}>Medium</Text>
         </View>
         <View style={styles.statItem}>
           <View style={[styles.statDot, { backgroundColor: "#E53935" }]} />
@@ -119,26 +119,30 @@ export default function HomeScreen({ navigation }) {
           </TouchableOpacity>
         </View>
 
-        {recentActivity.map((item) => (
-          <TouchableOpacity
-            key={item.scanId}
-            style={styles.activityCard}
-            onPress={() => navigation.navigate("HistoryDetails", { inspection: item, source: "Home" })}
-          >
-            <View style={[styles.severityBar, { backgroundColor: getSeverityColor(item.severity) }]} />
-            <View style={styles.activityContent}>
-              <Text style={styles.activityLocation}>{item.location}</Text>
-              <Text style={styles.activityTime}>
-                {item.date?.toDate ? item.date.toDate().toLocaleString() : "—"}
-              </Text>
-            </View>
-            <View style={[styles.severityBadge, getSeverityBadgeStyle(item.severity)]}>
-              <Text style={[styles.severityBadgeText, { color: getSeverityColor(item.severity) }]}>
-                {item.severity}
-              </Text>
-            </View>
-          </TouchableOpacity>
-        ))}
+        {recentActivity.length === 0 ? (
+          <Text style={styles.noActivity}>No recent inspections yet.</Text>
+        ) : (
+          recentActivity.map((item) => (
+            <TouchableOpacity
+              key={item.id}
+              style={styles.activityCard}
+              onPress={() => navigation.navigate("HistoryDetails", { inspection: item, source: "Home" })}
+            >
+              <View style={[styles.severityBar, { backgroundColor: getSeverityColor(item.severity) }]} />
+              <View style={styles.activityContent}>
+                <Text style={styles.activityLocation}>{item.location}</Text>
+                <Text style={styles.activityTime}>
+                  {item.date?.toDate ? item.date.toDate().toLocaleString() : "—"}
+                </Text>
+              </View>
+              <View style={[styles.severityBadge, getSeverityBadgeStyle(item.severity)]}>
+                <Text style={[styles.severityBadgeText, { color: getSeverityColor(item.severity) }]}>
+                  {item.severity}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          ))
+        )}
 
         <View style={{ height: 30 }} />
       </ScrollView>
@@ -165,6 +169,7 @@ const styles = StyleSheet.create({
   sectionHeader: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 14 },
   sectionTitle: { color: "#1A3050", fontSize: 17, fontWeight: "700" },
   seeAll: { color: "#8AAAC8", fontSize: 13 },
+  noActivity: { color: "#8AAAC8", fontSize: 14, textAlign: "center", marginTop: 20 },
   activityCard: { backgroundColor: "#D8E3EE", borderRadius: 12, flexDirection: "row", alignItems: "center", marginBottom: 10, overflow: "hidden", paddingRight: 14, paddingVertical: 14 },
   severityBar: { width: 4, height: "100%", borderRadius: 2, marginRight: 14, marginLeft: 4, minHeight: 44 },
   activityContent: { flex: 1 },
