@@ -20,6 +20,7 @@
     "expo-font": "~55.0.8",
     "expo-image-picker": "~55.0.20",
     "expo-linear-gradient": "~55.0.14",
+    "expo-location": "~55.1.10",
     "firebase": "^12.14.0",
     "react": "19.2.0",
     "react-native": "0.83.6",
