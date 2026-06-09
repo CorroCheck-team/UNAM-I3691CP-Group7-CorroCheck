@@ -14,7 +14,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../services/firebase/firebaseConfig';
-import { createUserDocument } from '../../../backend/services/userService';
+import { createUserDocument } from '../../services/firebase/userService';
 
 export default function SignUpScreen({ navigation }) {
   const [fullName, setFullName] = useState('');
