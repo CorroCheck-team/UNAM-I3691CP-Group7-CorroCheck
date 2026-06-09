@@ -21,7 +21,7 @@ import { uploadImageToFirebase } from "../../services/uploadService";
 
 const CORROSION_TYPES = ["Galvanic", "Pitting", "Crevice", "Oxidation-Corrosion"];
 
-const BACKEND_URL = "http://10.222.224.174:5000";
+const BACKEND_URL = "https://unam-i3691cp-group7-corrocheck-production.up.railway.app";
 
 export default function SubmissionScreen({ navigation }) {
   const [manualLocation, setManualLocation] = useState("");
