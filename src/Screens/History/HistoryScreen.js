@@ -14,37 +14,31 @@ import { Ionicons } from "@expo/vector-icons";
 import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
 import { db, auth } from "../../services/firebase/firebaseConfig";
 
-// ── Severity helpers ───────────────────────────────────────────────────────
 function getSeverityColors(severity) {
   switch (severity) {
     case "High":
-      return { bg: "#FDECEA", text: "#E53935", border: "#E53935" };
-    case "Moderate":
-      return { bg: "#FFF3E0", text: "#FB8C00", border: "#FB8C00" };
+      return { bg: "#FDECEA", text: "#E53935" };
+    case "Medium":
+      return { bg: "#FFF3E0", text: "#FB8C00" };
     case "Low":
-      return { bg: "#E8F5E9", text: "#43A047", border: "#43A047" };
+      return { bg: "#E8F5E9", text: "#43A047" };
     default:
-      return { bg: "#F0F0F0", text: "#666", border: "#ccc" };
+      return { bg: "#F0F0F0", text: "#666" };
   }
 }
 
 function getLeftBorderColor(severity) {
   switch (severity) {
-    case "High":
-      return "#E53935";
-    case "Moderate":
-      return "#FB8C00";
-    case "Low":
-      return "#43A047";
-    default:
-      return "#ccc";
+    case "High":   return "#E53935";
+    case "Medium": return "#FB8C00";
+    case "Low":    return "#43A047";
+    default:       return "#ccc";
   }
 }
 
-// ── Inspection Card ────────────────────────────────────────────────────────
 function InspectionCard({ item, onPress }) {
-  const severityColors = getSeverityColors(item.severity); // ✅ fixed
-  const borderColor = getLeftBorderColor(item.severity);   // ✅ fixed
+  const severityColors = getSeverityColors(item.severity);
+  const borderColor = getLeftBorderColor(item.severity);
 
   return (
     <Pressable
@@ -87,17 +81,14 @@ function InspectionCard({ item, onPress }) {
   );
 }
 
-// ── Main Screen ────────────────────────────────────────────────────────────
 export default function HistoryScreen({ navigation }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [inspections, setInspections] = useState([]);
 
   useEffect(() => {
     const userId = auth.currentUser?.uid;
-
     if (!userId) return;
 
-    // ✅ correct path: users/{userId}/scans ordered by date
     const q = query(
       collection(db, "users", userId, "scans"),
       orderBy("date", "desc")
@@ -171,3 +162,79 @@ export default function HistoryScreen({ navigation }) {
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  safe: { flex: 1, backgroundColor: "#F0F4F8" },
+  header: {
+    backgroundColor: "#1A3050",
+    paddingTop: 55,
+    paddingBottom: 18,
+    alignItems: "center",
+  },
+  headerTitle: { color: "#FFFFFF", fontSize: 18, fontWeight: "700", letterSpacing: 0.3 },
+  searchContainer: { paddingHorizontal: 16, paddingVertical: 12 },
+  searchBar: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#FFFFFF",
+    borderRadius: 10,
+    paddingHorizontal: 12,
+    height: 44,
+    borderWidth: 1,
+    borderColor: "#D8E3EE",
+  },
+  searchIcon: { marginRight: 8 },
+  searchInput: { flex: 1, color: "#1A3050", fontSize: 14 },
+  countText: {
+    color: "#8AAAC8",
+    fontSize: 13,
+    paddingHorizontal: 18,
+    marginBottom: 6,
+  },
+  listContent: { paddingHorizontal: 16, paddingBottom: 20, gap: 10 },
+  card: {
+    flexDirection: "row",
+    backgroundColor: "#FFFFFF",
+    borderRadius: 12,
+    overflow: "hidden",
+    alignItems: "center",
+    elevation: 2,
+    shadowColor: "#1A3050",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.06,
+    shadowRadius: 4,
+  },
+  cardPressed: { opacity: 0.85 },
+  leftBar: { width: 5, alignSelf: "stretch" },
+  thumbnail: {
+    width: 56,
+    height: 56,
+    margin: 12,
+    borderRadius: 8,
+    backgroundColor: "#E3EAF2",
+    alignItems: "center",
+    justifyContent: "center",
+    overflow: "hidden",
+  },
+  thumbnailImage: { width: "100%", height: "100%" },
+  cardInfo: { flex: 1, paddingVertical: 12 },
+  cardLocation: { color: "#1A3050", fontSize: 14, fontWeight: "600", marginBottom: 3 },
+  cardDate: { color: "#8AAAC8", fontSize: 12, marginBottom: 2 },
+  cardType: { color: "#8AAAC8", fontSize: 12 },
+  cardRight: { alignItems: "center", paddingRight: 12, gap: 6 },
+  badge: {
+    borderRadius: 20,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+  },
+  badgeText: { fontSize: 12, fontWeight: "600" },
+  chevron: { marginTop: 4 },
+  emptyState: {
+    alignItems: "center",
+    justifyContent: "center",
+    paddingTop: 80,
+    gap: 12,
+  },
+  emptyTitle: { color: "#1A3050", fontSize: 18, fontWeight: "600" },
+  emptySubtext: { color: "#8AAAC8", fontSize: 14, textAlign: "center", lineHeight: 22 },
+});
